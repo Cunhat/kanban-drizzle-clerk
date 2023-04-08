@@ -21,7 +21,7 @@ const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
 });
 
-const LayoutMainConainerStyles = cva(
+const LayoutMainContainerStyles = cva(
   `${jakarta.variable} grid min-h-screen bg-customGrey-100 font-sans dark:bg-customGrey-900`,
   {
     variants: {
@@ -43,7 +43,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body>
         <Providers>
-          <div className={LayoutMainConainerStyles({ isOpen })}>
+          <div className={LayoutMainContainerStyles({ isOpen })}>
             <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />
             <div className="flex h-full flex-col">
               <NavBar />
