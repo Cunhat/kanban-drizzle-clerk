@@ -1,65 +1,70 @@
-"use client";
-import "./globals.css";
 import { NextPage } from "next/types";
-import { PropsWithChildren, useState, ReactNode } from "react";
+import { PropsWithChildren, ReactElement, ReactNode } from "react";
 import Image from "next/image";
-import { Heading } from "@/components/ui/Heading";
+import { Heading } from "../ui/Heading";
 import { Plus_Jakarta_Sans } from "next/font/google";
-import { Button } from "@/components/ui/Button";
-import { Body } from "@/components/ui/Body";
-import { ThemeSwitcher } from "@/components/ThemeSwitcher";
+import { Button } from "../ui/Button";
+import { Body } from "../ui/Body";
+import { ThemeSwitcher } from "../ThemeSwitcher";
 import { ThemeProvider } from "next-themes";
 import React from "react";
-import { IconHideSideBar } from "@/components/Svg/IconHideSideBar";
-import { IconBoard } from "@/components/Svg/IconBoard";
+import { IconHideSideBar } from "../Svg/IconHideSideBar";
+import { IconBoard } from "../Svg/IconBoard";
 import Link from "next/link";
 import { cva } from "class-variance-authority";
-import { Providers } from "@/components/Providers";
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-jakarta",
 });
 
-const LayoutMainConainerStyles = cva(
-  `${jakarta.variable} grid min-h-screen bg-customGrey-100 font-sans dark:bg-customGrey-900`,
-  {
-    variants: {
-      isOpen: {
-        true: "md:grid-cols-[261px_auto]",
-        false: "md:grid-cols-1",
-      },
-    },
-  }
-);
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [isOpen, setIsOpen] = useState(true);
+export const MainLayout: React.FC<PropsWithChildren> = ({ children }) => {
+  const [isOpen, setIsOpen] = React.useState(true);
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body>
-        <Providers>
-          <div className={LayoutMainConainerStyles({ isOpen })}>
-            <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />
-            <div className="flex h-full flex-col">
-              <NavBar />
-              <main className="flex-1">{children}</main>
-            </div>
-          </div>
-        </Providers>
-      </body>
-    </html>
+    <ThemeProvider storageKey="preferred-theme" attribute="class">
+      <div
+        className={`${
+          jakarta.variable
+        } grid min-h-screen bg-customGrey-100 font-sans dark:bg-customGrey-900 ${
+          isOpen ? "md:grid-cols-[261px_auto]" : "md:grid-cols-1"
+        } `}
+      >
+        <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />
+        <div className="flex h-full flex-col ">
+          <NavBar />
+          <main className="flex-1">{children}</main>
+        </div>
+      </div>
+    </ThemeProvider>
   );
-}
+};
+
+const BoardsList: React.FC = () => {
+  return (
+    <div className="pr-6">
+      <Body className="mb-5 pl-8 text-customGrey-500" size="md">
+        ALL BOARDS (8)
+      </Body>
+      <BoardButton type="isLink" title="Logout" href="/test" />
+      <BoardButton type="isLink" title="Logout" />
+      <BoardButton type="isLink" title="Logout" />
+      <BoardButton
+        type="buttonLink"
+        title="+ Create New Board"
+        //onClick={() => setIsOpen(!isOpen)}
+      />
+    </div>
+  );
+};
 
 const SideBar: React.FC<{
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
 }> = ({ isOpen, setIsOpen }) => {
+  React.useEffect(() => {
+    console.log(isOpen);
+  }, [isOpen]);
+
   if (!isOpen)
     return (
       <div
@@ -199,23 +204,5 @@ const BoardButton: React.FC<BoardButtonProps> = ({
         </Heading>
       </>
     </Component>
-  );
-};
-
-const BoardsList: React.FC = () => {
-  return (
-    <div className="pr-6">
-      <Body className="mb-5 pl-8 text-customGrey-500" size="md">
-        ALL BOARDS (8)
-      </Body>
-      <BoardButton type="isLink" title="Logout" href="/test" />
-      <BoardButton type="isLink" title="Logout" />
-      <BoardButton type="isLink" title="Logout" />
-      <BoardButton
-        type="buttonLink"
-        title="+ Create New Board"
-        //onClick={() => setIsOpen(!isOpen)}
-      />
-    </div>
   );
 };
